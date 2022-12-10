@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.dimensionResource
@@ -31,17 +32,25 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyFirstStageAppForVKCup2022Theme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                MainScreen()
+            }
+        }
+    }
+}
+
+@Composable
+private fun MainScreen() {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        LazyColumn {
+            item {
+                FlowRow(
+                    modifier = Modifier
+                    .padding(dimensionResource(R.dimen.padding_small))
                 ) {
-                    LazyColumn {
-                        item {
-                            FlowRow(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))) {
-                                createChips()
-                            }
-                        }
-                    }
+                    CreateChips()
                 }
             }
         }
@@ -49,7 +58,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun createChips() {
+fun CreateChips() {
     val categoriesList = getListOfCategories()
     categoriesList.forEach { DrawCheckbox(it) }
 }
@@ -58,7 +67,7 @@ fun createChips() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DrawCheckbox(category: String) {
-    var selected by remember {
+    var selected by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -91,12 +100,12 @@ private fun DrawCheckbox(category: String) {
         trailingIcon = if (selected) {
             {
                 Divider(
-                color = White,
-                modifier = Modifier
-                    .height(20.dp)
-                    .width(1.dp)
-                    .alpha(0.0f)
-            )
+                    color = White,
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(1.dp)
+                        .alpha(0.0f)
+                )
                 Icon(
                     modifier = Modifier.size(18.dp),
                     tint = White,
