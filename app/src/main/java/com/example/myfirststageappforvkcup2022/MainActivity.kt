@@ -1,24 +1,27 @@
 package com.example.myfirststageappforvkcup2022
 
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myfirststageappforvkcup2022.ui.theme.*
+import com.example.myfirststageappforvkcup2022.ui.theme.MyFirstStageAppForVKCup2022Theme
+import com.example.myfirststageappforvkcup2022.ui.theme.Orange
+import com.example.myfirststageappforvkcup2022.ui.theme.TransparentWhite
+import com.example.myfirststageappforvkcup2022.ui.theme.White
 import com.google.accompanist.flowlayout.FlowRow
 
 private const val TAG = "@@@ MainActivity"
@@ -32,15 +35,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    FlowRow(modifier = Modifier.padding(10.dp)) {
-                        createChips()
+                    LazyColumn {
+                        item {
+                            FlowRow(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))) {
+                                createChips()
+                            }
+                        }
                     }
                 }
             }
         }
     }
 }
-
 
 @Composable
 fun createChips() {
@@ -64,6 +70,12 @@ private fun DrawCheckbox(category: String) {
 
     FilterChip(
         colors = filterChipsColors,
+        modifier = Modifier.padding(
+            dimensionResource(R.dimen.padding_zero),
+            dimensionResource(R.dimen.padding_zero),
+            dimensionResource(R.dimen.padding_small),
+            dimensionResource(R.dimen.padding_zero)
+        ),
         border = null,
         selected = selected,
         onClick = { selected = !selected },
@@ -78,11 +90,18 @@ private fun DrawCheckbox(category: String) {
         },
         trailingIcon = if (selected) {
             {
+                Divider(
+                color = White,
+                modifier = Modifier
+                    .height(20.dp)
+                    .width(1.dp)
+                    .alpha(0.0f)
+            )
                 Icon(
+                    modifier = Modifier.size(18.dp),
                     tint = White,
                     imageVector = Icons.Filled.Done,
-                    contentDescription = "Localized Description",
-                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    contentDescription = "Localized Description"
                 )
             }
         } else {
