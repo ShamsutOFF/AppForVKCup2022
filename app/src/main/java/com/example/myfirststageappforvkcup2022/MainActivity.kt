@@ -1,6 +1,9 @@
+@file:Suppress("OPT_IN_IS_NOT_ENABLED")
+
 package com.example.myfirststageappforvkcup2022
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -9,10 +12,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -26,6 +35,7 @@ import com.example.myfirststageappforvkcup2022.ui.theme.White
 import com.google.accompanist.flowlayout.FlowRow
 
 private const val TAG = "@@@ MainActivity"
+private val categories = mutableListOf<String>()
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,11 +58,42 @@ private fun MainScreen() {
             item {
                 FlowRow(
                     modifier = Modifier
-                    .padding(dimensionResource(R.dimen.padding_small))
+                        .padding(dimensionResource(R.dimen.padding_small))
                 ) {
                     CreateChips()
+                    DrawButton()
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun DrawButton() {
+    val context = LocalContext.current
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Button(
+//            enabled = categories.isNotEmpty(),
+            onClick = {
+                Toast.makeText(context, "Вы выбрали: $categories", Toast.LENGTH_SHORT).show()
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = White),
+            modifier = Modifier
+                .padding(
+                    dimensionResource(R.dimen.padding_zero),
+                    dimensionResource(R.dimen.padding_big),
+                    dimensionResource(R.dimen.padding_zero),
+                    dimensionResource(R.dimen.padding_zero)
+                )
+                .height(80.dp)
+                .width(211.dp),
+        ) {
+            Text(
+                fontSize = 18.sp,
+                color = Color.Black,
+                text = "Продолжить",
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -62,7 +103,6 @@ fun CreateChips() {
     val categoriesList = getListOfCategories()
     categoriesList.forEach { DrawCheckbox(it) }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,7 +127,11 @@ private fun DrawCheckbox(category: String) {
         ),
         border = null,
         selected = selected,
-        onClick = { selected = !selected },
+        onClick = {
+            selected = !selected
+            if (selected) categories.add(category)
+            else categories.remove(category)
+        },
         label = {
             Text(
                 fontSize = 16.sp,
