@@ -12,11 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -36,6 +33,7 @@ import com.google.accompanist.flowlayout.FlowRow
 
 private const val TAG = "@@@ MainActivity"
 private val categories = mutableListOf<String>()
+private val buttonEnabled = mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +71,7 @@ fun DrawButton() {
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Button(
-//            enabled = categories.isNotEmpty(),
+            enabled = buttonEnabled.value,
             onClick = {
                 Toast.makeText(context, "Вы выбрали: $categories", Toast.LENGTH_SHORT).show()
             },
@@ -86,7 +84,8 @@ fun DrawButton() {
                     dimensionResource(R.dimen.padding_zero)
                 )
                 .height(80.dp)
-                .width(211.dp),
+                .width(211.dp)
+                .alpha(if (buttonEnabled.value) 1.0f else 0.0f),
         ) {
             Text(
                 fontSize = 18.sp,
@@ -131,6 +130,7 @@ private fun DrawCheckbox(category: String) {
             selected = !selected
             if (selected) categories.add(category)
             else categories.remove(category)
+            buttonEnabled.value = categories.isNotEmpty()
         },
         label = {
             Text(
