@@ -25,15 +25,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myfirststageappforvkcup2022.ui.theme.MyFirstStageAppForVKCup2022Theme
-import com.example.myfirststageappforvkcup2022.ui.theme.Orange
-import com.example.myfirststageappforvkcup2022.ui.theme.TransparentWhite
-import com.example.myfirststageappforvkcup2022.ui.theme.White
+import com.example.myfirststageappforvkcup2022.ui.theme.*
 import com.google.accompanist.flowlayout.FlowRow
 
 private const val TAG = "@@@ MainActivity"
+
 private val categories = mutableListOf<String>()
 private val buttonEnabled = mutableStateOf(false)
+private val DIMENS = Dimens()
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,47 +51,19 @@ private fun MainScreen() {
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.padding_medium))
+        ) {
             item {
-                FlowRow(
+                FlowRow (
                     modifier = Modifier
-                        .padding(dimensionResource(R.dimen.padding_small))
-                ) {
+                        .padding(dimensionResource(R.dimen.padding_zero))
+                ){
                     CreateChips()
                     DrawButton()
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun DrawButton() {
-    val context = LocalContext.current
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Button(
-            enabled = buttonEnabled.value,
-            onClick = {
-                Toast.makeText(context, "Вы выбрали: $categories", Toast.LENGTH_SHORT).show()
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = White),
-            modifier = Modifier
-                .padding(
-                    dimensionResource(R.dimen.padding_zero),
-                    dimensionResource(R.dimen.padding_big),
-                    dimensionResource(R.dimen.padding_zero),
-                    dimensionResource(R.dimen.padding_zero)
-                )
-                .height(80.dp)
-                .width(211.dp)
-                .alpha(if (buttonEnabled.value) 1.0f else 0.0f),
-        ) {
-            Text(
-                fontSize = 18.sp,
-                color = Color.Black,
-                text = "Продолжить",
-                textAlign = TextAlign.Center
-            )
         }
     }
 }
@@ -120,10 +91,10 @@ private fun DrawCheckbox(category: String) {
         colors = filterChipsColors,
         modifier = Modifier.padding(
             dimensionResource(R.dimen.padding_zero),
-            dimensionResource(R.dimen.padding_zero),
+            dimensionResource(R.dimen.padding_small),
             dimensionResource(R.dimen.padding_small),
             dimensionResource(R.dimen.padding_zero)
-        ),
+        ).height(dimensionResource(R.dimen.chip_height)),
         border = null,
         selected = selected,
         onClick = {
@@ -134,7 +105,7 @@ private fun DrawCheckbox(category: String) {
         },
         label = {
             Text(
-                fontSize = 16.sp,
+                fontSize = DIMENS.FONT_SIZE_16,
                 color = White,
                 text = category,
                 fontFamily = sfproFont,
@@ -146,12 +117,12 @@ private fun DrawCheckbox(category: String) {
                 Divider(
                     color = White,
                     modifier = Modifier
-                        .height(20.dp)
-                        .width(1.dp)
-                        .alpha(0.0f)
+                        .height(dimensionResource(id = R.dimen.divider_height))
+                        .width(dimensionResource(id = R.dimen.divider_width))
+                        .alpha(DIMENS.ALPHA_INVISIBLE)
                 )
                 Icon(
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.icon_size)),
                     tint = White,
                     imageVector = Icons.Filled.Done,
                     contentDescription = "Localized Description"
@@ -162,11 +133,11 @@ private fun DrawCheckbox(category: String) {
                 Divider(
                     color = White,
                     modifier = Modifier
-                        .height(20.dp)
-                        .width(1.dp)
+                        .height(dimensionResource(id = R.dimen.divider_height))
+                        .width(dimensionResource(id = R.dimen.divider_width))
                 )
                 Icon(
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.icon_size)),
                     tint = White,
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Localized description"
@@ -175,6 +146,37 @@ private fun DrawCheckbox(category: String) {
         }
     )
 
+}
+
+@Composable
+fun DrawButton() {
+    val context = LocalContext.current
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Button(
+            enabled = buttonEnabled.value,
+            onClick = {
+                Toast.makeText(context, "Вы выбрали: $categories", Toast.LENGTH_SHORT).show()
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = White),
+            modifier = Modifier
+                .padding(
+                    dimensionResource(R.dimen.padding_zero),
+                    dimensionResource(R.dimen.padding_big),
+                    dimensionResource(R.dimen.padding_zero),
+                    dimensionResource(R.dimen.padding_zero)
+                )
+                .height(80.dp)
+                .width(211.dp)
+                .alpha(if (buttonEnabled.value) DIMENS.ALPHA_VISIBLE else DIMENS.ALPHA_INVISIBLE),
+        ) {
+            Text(
+                fontSize = DIMENS.FONT_SIZE_18,
+                color = Color.Black,
+                text = "Продолжить",
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 fun getListOfCategories(): List<String> {
