@@ -47,6 +47,11 @@ android {
 }
 
 dependencies {
+    // Navigation
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+    // Accompanist
+    implementation "com.google.accompanist:accompanist-pager:0.24.1-alpha" // Pager
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.24.1-alpha" // Pager Indicators
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
