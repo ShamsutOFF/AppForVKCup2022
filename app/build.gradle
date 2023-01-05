@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.myfirststageappforvkcup2022'
+    namespace 'com.example.appforvkcup2022'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.myfirststageappforvkcup2022"
+        applicationId "com.example.appforvkcup2022"
         minSdk 21
         targetSdk 33
         versionCode 1

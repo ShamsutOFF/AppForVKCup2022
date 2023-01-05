@@ -1,8 +1,7 @@
-package com.example.myfirststageappforvkcup2022.ui.theme
+package com.example.appforvkcup2022.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val DarkColorScheme = darkColorScheme(
@@ -13,7 +12,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 @Composable
-fun MyFirstStageAppForVKCup2022Theme(
+fun AppForVKCup2022Theme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

@@ -1,4 +1,4 @@
-package com.example.myfirststageappforvkcup2022
+package com.example.appforvkcup2022
 
 import org.junit.Test
 

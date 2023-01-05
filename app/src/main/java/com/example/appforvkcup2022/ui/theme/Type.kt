@@ -1,4 +1,4 @@
-package com.example.myfirststageappforvkcup2022.ui.theme
+package com.example.appforvkcup2022.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

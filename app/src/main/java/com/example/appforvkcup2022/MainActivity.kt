@@ -1,6 +1,6 @@
 @file:Suppress("OPT_IN_IS_NOT_ENABLED")
 
-package com.example.myfirststageappforvkcup2022
+package com.example.appforvkcup2022
 
 import android.os.Bundle
 import android.widget.Toast
@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.myfirststageappforvkcup2022.ui.theme.*
+import com.example.appforvkcup2022.ui.theme.*
 import com.google.accompanist.flowlayout.FlowRow
 
 
@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyFirstStageAppForVKCup2022Theme {
+            AppForVKCup2022Theme {
                 MainScreen()
             }
         }
@@ -234,7 +234,6 @@ fun getListOfCategories(): List<String> {
         "Мотоциклы",
         "Книги",
         "Музыка",
-        "Кино",
         "Сериалы",
         "Спорт",
         "Прогулки",
