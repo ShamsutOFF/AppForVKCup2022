@@ -26,7 +26,7 @@ import com.google.accompanist.flowlayout.FlowRow
 
 private val categories = mutableListOf<String>()
 private val buttonEnabled = mutableStateOf(false)
-private val DIMENS = Dimens()
+val DIMENS = Dimens()
 
 @Composable
 fun FirstStageScreen() {
