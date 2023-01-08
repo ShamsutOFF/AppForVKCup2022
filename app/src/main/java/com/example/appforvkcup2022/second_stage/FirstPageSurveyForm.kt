@@ -1,28 +1,26 @@
 package com.example.appforvkcup2022.second_stage
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.appforvkcup2022.R
 import com.example.appforvkcup2022.first_stage.DIMENS
 import com.example.appforvkcup2022.second_stage.model.Answer
 import com.example.appforvkcup2022.second_stage.model.SurveyForm
-import com.example.appforvkcup2022.sfproFont
 import com.example.appforvkcup2022.ui.theme.*
 import kotlin.random.Random
 
@@ -84,35 +82,48 @@ private fun DrawChip(answer: Answer, enabled: Boolean, click: () -> Unit) {
         else if (checked) colorsWrong
         else colorsDefault
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = answer.answer, fontSize = DIMENS.FONT_SIZE_16)
+        Column() {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.width(50.dp)
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(
-                    modifier = Modifier
-                        .size(dimensionResource(R.dimen.icon_size))
-                        .alpha(
-                            if (checked) DIMENS.ALPHA_VISIBLE
+                Text(text = answer.answer, fontSize = DIMENS.FONT_SIZE_16)
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.width(60.dp)
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(dimensionResource(R.dimen.icon_size))
+                            .alpha(
+                                if (checked) DIMENS.ALPHA_VISIBLE
+                                else DIMENS.ALPHA_INVISIBLE
+                            ),
+                        tint = White,
+                        imageVector = Icons.Filled.Done,
+                        contentDescription = "Localized Description"
+                    )
+                    Text(
+                        modifier = Modifier.alpha(
+                            if (!enabled) DIMENS.ALPHA_VISIBLE
                             else DIMENS.ALPHA_INVISIBLE
                         ),
-                    tint = White,
-                    imageVector = Icons.Filled.Done,
-                    contentDescription = "Localized Description"
-                )
-                Text(
-                    modifier = Modifier.alpha(
-                        if (!enabled) DIMENS.ALPHA_VISIBLE
-                        else DIMENS.ALPHA_INVISIBLE
-                    ),
-                    text = answer.percent.toString() + " %", fontSize = DIMENS.FONT_SIZE_16
-                )
+                        text = answer.percent.toString() + " %", fontSize = DIMENS.FONT_SIZE_16
+                    )
+                }
             }
+
+            val progress by animateFloatAsState(
+                targetValue = if (enabled) 0f else answer.percent / 100.toFloat(),
+                animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+            )
+            LinearProgressIndicator(
+                progress,
+                modifier = Modifier.fillMaxWidth().height(2.dp),
+                color = White,
+                trackColor = InvisibleColor
+            )
         }
     }
 }

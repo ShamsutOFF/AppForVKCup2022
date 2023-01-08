@@ -7,6 +7,6 @@ data class SurveyForm(
 
 data class Answer(
     val answer: String,
-    var percent: Int?,
+    var percent: Int,
     val right: Boolean
     )
