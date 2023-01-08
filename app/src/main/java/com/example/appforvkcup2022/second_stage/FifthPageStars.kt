@@ -84,14 +84,23 @@ fun StarsRatingBar(
                 modifier = Modifier
 //                    .size(sizeValue)
                     .size(size)
-                    .graphicsLayer { rotationY = rotation.value }
+                    .graphicsLayer { if (i <= ratingState) rotationY = rotation.value }
                     .pointerInteropFilter {
                         println("it.action - ${it.action}")
                         when (it.action) {
                             MotionEvent.ACTION_DOWN -> {
+                                if (ratingState == i){
+//                                    selected = true
+                                    ratingState = 0
+//                                    animated = !animated
+                                } else{
+//                                    selected = true
+                                    ratingState = i
+//                                    animated = !animated
+                                }
                                 selected = true
-                                ratingState = i
                                 animated = !animated
+
                             }
                             MotionEvent.ACTION_UP -> selected = false
 //                            MotionEvent.ACTION_UP -> {
