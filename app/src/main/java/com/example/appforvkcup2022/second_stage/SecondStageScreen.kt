@@ -24,7 +24,7 @@ import com.google.accompanist.pager.rememberPagerState
 @Composable
 fun SecondStageScreen() {
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(0.dp, 32.dp, 0.dp, 0.dp)
     ) { padding ->
         Column(
             Modifier

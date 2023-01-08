@@ -15,13 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appforvkcup2022.R
 import com.example.appforvkcup2022.first_stage.DIMENS
 import com.example.appforvkcup2022.second_stage.model.Answer
 import com.example.appforvkcup2022.second_stage.model.SurveyForm
-import com.example.appforvkcup2022.ui.theme.White
+import com.example.appforvkcup2022.sfproFont
+import com.example.appforvkcup2022.ui.theme.*
 import kotlin.random.Random
 
 @Composable
@@ -32,14 +34,19 @@ fun DrawFirstPage() {
                 modifier = Modifier
                     .padding(
                         8.dp,
-                        3.dp
+                        8.dp
                     )
                     .fillMaxWidth()
             ) {
                 val form = getRandomSurveyForm()
                 Column(modifier = Modifier.padding(8.dp)) {
-                    Text(modifier = Modifier.padding(3.dp), text = form.question, fontSize = 16.sp)
-                    CreateAnswersChipsGroup(form.answers)
+                    Text(
+                        modifier = Modifier.padding(3.dp),
+                        text = form.question,
+                        fontSize = DIMENS.FONT_SIZE_18,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    CreateAnswersChipsGroup(form.answers.shuffled())
                 }
             }
         }
@@ -49,31 +56,40 @@ fun DrawFirstPage() {
 @Composable
 fun CreateAnswersChipsGroup(answers: List<Answer>) {
     val percents = getRandomPercentForAnswers(answers.size)
-
+    var enabled by rememberSaveable {
+        mutableStateOf(true)
+    }
     answers.forEachIndexed { index, answer ->
         answer.percent = percents[index]
-        DrawCheckbox(answer = answer)
+        DrawChip(answer = answer, enabled) { enabled = false }
     }
 }
 
 @Composable
-private fun DrawCheckbox(answer: Answer) {
+private fun DrawChip(answer: Answer, enabled: Boolean, click: () -> Unit) {
+    val colorsRight = ButtonDefaults.elevatedButtonColors(disabledContainerColor = Green)
+    val colorsWrong = ButtonDefaults.elevatedButtonColors(disabledContainerColor = Red)
+    val colorsDefault = ButtonDefaults.elevatedButtonColors()
+    var checked by rememberSaveable { mutableStateOf(false) }
 
-    var enabled by rememberSaveable {
-        mutableStateOf(true)
-    }
     ElevatedButton(
-        onClick = { enabled = !enabled },
+        onClick = {
+            checked = true
+            click.invoke()
+        },
         modifier = Modifier.fillMaxWidth(),
         enabled = enabled,
-        shape = RoundedCornerShape(10)
+        shape = RoundedCornerShape(10),
+        colors = if (answer.right) colorsRight
+        else if (checked) colorsWrong
+        else colorsDefault
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = answer.answer)
+            Text(text = answer.answer, fontSize = DIMENS.FONT_SIZE_16)
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.width(50.dp)
@@ -82,7 +98,7 @@ private fun DrawCheckbox(answer: Answer) {
                     modifier = Modifier
                         .size(dimensionResource(R.dimen.icon_size))
                         .alpha(
-                            if (!enabled && answer.right) DIMENS.ALPHA_VISIBLE
+                            if (checked) DIMENS.ALPHA_VISIBLE
                             else DIMENS.ALPHA_INVISIBLE
                         ),
                     tint = White,
@@ -94,7 +110,7 @@ private fun DrawCheckbox(answer: Answer) {
                         if (!enabled) DIMENS.ALPHA_VISIBLE
                         else DIMENS.ALPHA_INVISIBLE
                     ),
-                    text = answer.percent.toString() + " %"
+                    text = answer.percent.toString() + " %", fontSize = DIMENS.FONT_SIZE_16
                 )
             }
         }
@@ -119,7 +135,7 @@ fun getSurveyForms(): List<SurveyForm> {
         SurveyForm(
             "Самая маленькая птица:", listOf(
                 Answer("Колибри", 0, true),
-                Answer("Снигирь", 0, false),
+                Answer("Снегирь", 0, false),
                 Answer("Ворона", 0, false)
             )
         ),
