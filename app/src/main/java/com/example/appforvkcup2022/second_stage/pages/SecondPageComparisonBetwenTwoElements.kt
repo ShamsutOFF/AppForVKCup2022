@@ -11,10 +11,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.boundsInParent
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.appforvkcup2022.ui.theme.White
 import kotlin.math.roundToInt
@@ -24,32 +30,44 @@ private const val ROUND = 100
 
 @Composable
 fun DrawSecondPage() {
-    var draggableComposable by remember {
-        mutableStateOf<(@Composable () -> Unit)?>(null)
-    }
-
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val screenHeight = LocalConfiguration.current.screenHeightDp
     LazyColumn() {
         items(count = Int.MAX_VALUE) { count ->
             ElevatedCard(
-                modifier = Modifier.padding(
-                    8.dp,
-                    8.dp
-                )
+                modifier = Modifier
+                    .padding(8.dp, 8.dp)
+                    .fillMaxWidth()
+                    .height(Dp(screenHeight / 2.5f))
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+//                        .height(Dp(screenHeight / 3f))
                         .height(300.dp)
+                        .onGloballyPositioned {
+                            println("screenHeight = $screenHeight")
+                            println("screenWidth = $screenWidth")
+                            println("Box it.boundsInParent().size = ${it.boundsInParent().size}")
+                        }
                 ) {
                     val comparison = getRandomComparison()
-                    val xCoordinates = listOf(100f, 900f)
-                    val yCoordinates = listOf(100f, 300f, 500f, 700f)
-                    var i = 0
+
+                    val xCoordinates = listOf(screenWidth/2f, screenWidth/0.43f)
+                    val yCoordinates = mutableListOf(100f, 300f, 500f, 700f)
+
+                    println("yCoordinates = $yCoordinates")
+                    val yCoordinates2 = mutableListOf(100f, 300f, 500f, 700f)
                     comparison.pairs.forEach {
-                        DrawBubble(
-                            firstStartValue = Offset(xCoordinates[0], yCoordinates[i]),
-                            SecondStartValue = Offset(xCoordinates[1], yCoordinates[i++]), text = it
+                        val randomFirst = Random.nextInt(yCoordinates.size)
+                        val randomSecond = Random.nextInt(yCoordinates2.size)
+                        CreatePair(
+                            firstStartValue = Offset(xCoordinates[0], yCoordinates[randomFirst]),
+                            SecondStartValue = Offset(xCoordinates[1], yCoordinates2[randomSecond]),
+                            text = it
                         )
+                        yCoordinates.removeAt(randomFirst)
+                        yCoordinates2.removeAt(randomSecond)
                     }
                 }
             }
@@ -58,36 +76,43 @@ fun DrawSecondPage() {
 }
 
 @Composable
-fun DrawBubble(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<String, String>) {
+fun CreatePair(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<String, String>) {
+
     var firstOffset by remember { mutableStateOf(firstStartValue) }
     var secondOffset by remember { mutableStateOf(SecondStartValue) }
     var match by remember { mutableStateOf(false) }
     val color by animateColorAsState(targetValue = if (match) Color.Green else White)
 
     val randomPoint by remember {
-        mutableStateOf(getRandomOffsetOutsideTheScreen() )
+        mutableStateOf(getRandomOffsetOutsideTheScreen())
     }
 
-
     val runawayOffsetFirst by animateOffsetAsState(
-        targetValue = if (match) randomPoint else Offset(500f,500f),
-//        targetValue = if (match) randomPoint else firstOffset,
+        targetValue = if (match) randomPoint else Offset(500f, 500f),
         animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
     )
     val runawayOffsetSecond by animateOffsetAsState(
-        targetValue = if (match) randomPoint else Offset(500f,500f),
+        targetValue = if (match) randomPoint else Offset(500f, 500f),
         animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
     )
 
+    var firstWidth = 0
+    var secondWidth = 0
 
     OutlinedButton(onClick = {},
         colors = ButtonDefaults.buttonColors(containerColor = color),
         modifier = Modifier
+            .onGloballyPositioned {
+                firstWidth = it.size.width
+            }
             .offset {
                 if (match)
                     IntOffset(runawayOffsetFirst.x.roundToInt(), runawayOffsetFirst.y.roundToInt())
                 else
-                    IntOffset(firstOffset.x.roundToInt(), firstOffset.y.roundToInt())
+                    IntOffset(
+                        firstOffset.x.roundToInt() - firstWidth / 2,
+                        firstOffset.y.roundToInt()
+                    )
             }
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -107,6 +132,9 @@ fun DrawBubble(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<Str
     OutlinedButton(onClick = {},
         colors = ButtonDefaults.buttonColors(containerColor = color),
         modifier = Modifier
+            .onGloballyPositioned {
+                secondWidth = it.size.width
+            }
             .offset {
                 if (match)
                     IntOffset(
@@ -114,7 +142,10 @@ fun DrawBubble(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<Str
                         runawayOffsetSecond.y.roundToInt()
                     )
                 else
-                    IntOffset(secondOffset.x.roundToInt(), secondOffset.y.roundToInt())
+                    IntOffset(
+                        secondOffset.x.roundToInt() - secondWidth / 2,
+                        secondOffset.y.roundToInt()
+                    )
             }
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -164,6 +195,38 @@ private fun getAllComparison(): List<Comparison> {
                 Pair("Два", "2"),
                 Pair("Три", "3"),
                 Pair("Четыре", "4")
+            )
+        ),
+        Comparison(
+            listOf(
+                Pair("Огурец", "Зеленый"),
+                Pair("Помидор", "Красный"),
+                Pair("Тыква", "Оранжевый"),
+                Pair("Лук", "Желтый")
+            )
+        ),
+        Comparison(
+            listOf(
+                Pair("Медведь", "Берлога"),
+                Pair("Лиса", "Нора"),
+                Pair("Белка", "Дупло"),
+                Pair("Птица", "Гнездо")
+            )
+        ),
+        Comparison(
+            listOf(
+                Pair("Кошка", "Мяукает"),
+                Pair("Собака", "Лает"),
+                Pair("Лошадь", "Ржет"),
+                Pair("Овца", "Блеет")
+            )
+        ),
+        Comparison(
+            listOf(
+                Pair("Январь", "Зима"),
+                Pair("Апрель", "Весна"),
+                Pair("Июль", "Лето"),
+                Pair("Сентябрь", "Осень")
             )
         )
     )
