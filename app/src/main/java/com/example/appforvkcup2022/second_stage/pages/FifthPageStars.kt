@@ -1,4 +1,4 @@
-package com.example.appforvkcup2022.second_stage
+package com.example.appforvkcup2022.second_stage.pages
 
 import android.view.MotionEvent
 import androidx.compose.animation.core.*
