@@ -26,7 +26,7 @@ import com.example.appforvkcup2022.ui.theme.White
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
-private const val ROUND = 100
+private const val ROUND = 150
 
 @Composable
 fun DrawSecondPage() {
@@ -53,10 +53,8 @@ fun DrawSecondPage() {
                 ) {
                     val comparison = getRandomComparison()
 
-                    val xCoordinates = listOf(screenWidth/2f, screenWidth/0.43f)
+                    val xCoordinates = listOf(100f, 700f)
                     val yCoordinates = mutableListOf(100f, 300f, 500f, 700f)
-
-                    println("yCoordinates = $yCoordinates")
                     val yCoordinates2 = mutableListOf(100f, 300f, 500f, 700f)
                     comparison.pairs.forEach {
                         val randomFirst = Random.nextInt(yCoordinates.size)
@@ -89,11 +87,11 @@ fun CreatePair(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<Str
 
     val runawayOffsetFirst by animateOffsetAsState(
         targetValue = if (match) randomPoint else Offset(500f, 500f),
-        animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+        animationSpec = tween(durationMillis = 2000, easing = LinearEasing)
     )
     val runawayOffsetSecond by animateOffsetAsState(
         targetValue = if (match) randomPoint else Offset(500f, 500f),
-        animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+        animationSpec = tween(durationMillis = 2000, easing = LinearEasing)
     )
 
     var firstWidth = 0
@@ -110,7 +108,7 @@ fun CreatePair(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<Str
                     IntOffset(runawayOffsetFirst.x.roundToInt(), runawayOffsetFirst.y.roundToInt())
                 else
                     IntOffset(
-                        firstOffset.x.roundToInt() - firstWidth / 2,
+                        firstOffset.x.roundToInt(),
                         firstOffset.y.roundToInt()
                     )
             }
@@ -143,7 +141,7 @@ fun CreatePair(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<Str
                     )
                 else
                     IntOffset(
-                        secondOffset.x.roundToInt() - secondWidth / 2,
+                        secondOffset.x.roundToInt(),
                         secondOffset.y.roundToInt()
                     )
             }
