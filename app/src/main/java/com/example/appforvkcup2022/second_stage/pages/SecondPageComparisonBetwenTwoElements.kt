@@ -1,5 +1,6 @@
 package com.example.appforvkcup2022.second_stage.pages
 
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateOffsetAsState
@@ -119,6 +120,7 @@ fun CreatePair(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<Str
                         firstOffset += dragAmount
                     },
                     onDragEnd = {
+                        Log.d("FirstButton", "firstOffset = $firstOffset secondOffset = $secondOffset")
                         match = checkMatching(firstOffset, secondOffset)
                     }
                 )
@@ -152,6 +154,7 @@ fun CreatePair(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<Str
                         secondOffset += dragAmount
                     },
                     onDragEnd = {
+                        Log.d("SecondButton", "firstOffset = $firstOffset secondOffset = $secondOffset")
                         match = checkMatching(firstOffset, secondOffset)
                     }
                 )
