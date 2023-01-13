@@ -68,15 +68,6 @@ class FourthPageViewModel : ViewModel() {
     fun getRandomTextAndWords(): TextWithMissingWords {
         val questions = getAllTextAndWords()
 return questions[Random.nextInt(questions.size)]
-    //        return TextWithMissingWords(
-//            "Текст $ несколькими пропусками $ вариантами.",
-//            listOf(
-//                Pair("один", 0),
-//                Pair("два", 0),
-//                Pair("и", 2),
-//                Pair("с", 1)
-//            )
-//        )
     }
 
     fun addTextPosition(position: Offset, id: Int) {

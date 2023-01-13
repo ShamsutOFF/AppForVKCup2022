@@ -31,7 +31,9 @@ import kotlin.math.roundToInt
 fun DrawFourthPage() {
     LazyColumn() {
         items(count = Int.MAX_VALUE) { count ->
-            ElevatedCard(modifier = Modifier.padding(8.dp).fillMaxWidth()) {
+            ElevatedCard(modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()) {
                 TextAndButtonsLoader(FourthPageViewModel())
             }
         }
@@ -44,14 +46,27 @@ fun TextAndButtonsLoader(viewModel: FourthPageViewModel) {
     val question = viewModel.getRandomTextAndWords()
     val text = question.text
     val missingWords = question.words
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(8.dp)) {
-        FlowRow(mainAxisAlignment = FlowMainAxisAlignment.Start) {
-            var tempText = ""
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        FlowRow(
+            mainAxisAlignment = FlowMainAxisAlignment.Start,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            var tempText = " "
             var id = 0
             text.forEachIndexed { index, it ->
                 if (index == text.lastIndex) {
                     tempText += it
                     OrdinaryText(string = tempText)
+                }
+                if (it == ' ') {
+                    tempText += it
+                    OrdinaryText(string = tempText)
+                    tempText = ""
                 }
                 if (it != '$') tempText += it
                 else {
