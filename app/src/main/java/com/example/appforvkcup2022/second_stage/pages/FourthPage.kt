@@ -42,7 +42,7 @@ fun DrawFourthPage() {
 
 
 @Composable
-fun TextAndButtonsLoader(viewModel: FourthPageViewModel) {
+private fun TextAndButtonsLoader(viewModel: FourthPageViewModel) {
     val question = viewModel.getRandomTextAndWords()
     val text = question.text
     val missingWords = question.words
@@ -84,13 +84,13 @@ fun TextAndButtonsLoader(viewModel: FourthPageViewModel) {
 }
 
 @Composable
-fun OrdinaryText(string: String) {
+private fun OrdinaryText(string: String) {
     Text(text = string, fontSize = 25.sp)
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun ReplaceableText(viewModel: FourthPageViewModel, id: Int) {
+private fun ReplaceableText(viewModel: FourthPageViewModel, id: Int) {
     var matchingWord by remember {
         mutableStateOf(" _____ ")
     }
@@ -107,7 +107,7 @@ fun ReplaceableText(viewModel: FourthPageViewModel, id: Int) {
 }
 
 @Composable
-fun ButtonForPlace(viewModel: FourthPageViewModel, text: String, id: Int) {
+private fun ButtonForPlace(viewModel: FourthPageViewModel, text: String, id: Int) {
     var buttonPosition by remember { mutableStateOf(Offset.Zero) }
     var buttonOffset by remember { mutableStateOf(Offset.Zero) }
     var visible by remember { mutableStateOf(true) }

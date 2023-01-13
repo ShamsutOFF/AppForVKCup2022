@@ -1,238 +1,126 @@
 package com.example.appforvkcup2022.second_stage.pages
 
-import android.util.Log
 import androidx.compose.animation.*
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateOffsetAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.boundsInParent
-import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.*
 import com.example.appforvkcup2022.ui.theme.White
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
-import kotlin.random.Random
-
-private const val ROUND = 150
 
 @Composable
 fun DrawSecondPage() {
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-    val screenHeight = LocalConfiguration.current.screenHeightDp
     LazyColumn() {
         items(count = Int.MAX_VALUE) { count ->
             ElevatedCard(
                 modifier = Modifier
                     .padding(8.dp, 8.dp)
                     .fillMaxWidth()
-                    .height(Dp(screenHeight / 2.5f))
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-//                        .height(Dp(screenHeight / 3f))
-                        .height(300.dp)
-                        .onGloballyPositioned {
-                            println("screenHeight = $screenHeight")
-                            println("screenWidth = $screenWidth")
-                            println("Box it.boundsInParent().size = ${it.boundsInParent().size}")
-                        }
-                ) {
-                    val comparison = getRandomComparison()
-
-                    val xCoordinates = listOf(100f, 700f)
-                    val yCoordinates = mutableListOf(100f, 300f, 500f, 700f)
-                    val yCoordinates2 = mutableListOf(100f, 300f, 500f, 700f)
-                    comparison.pairs.forEach {
-                        val randomFirst = Random.nextInt(yCoordinates.size)
-                        val randomSecond = Random.nextInt(yCoordinates2.size)
-                        CreatePair(
-                            firstStartValue = Offset(xCoordinates[0], yCoordinates[randomFirst]),
-                            SecondStartValue = Offset(xCoordinates[1], yCoordinates2[randomSecond]),
-                            text = it
-                        )
-                        yCoordinates.removeAt(randomFirst)
-                        yCoordinates2.removeAt(randomSecond)
-                    }
-                }
+                CreateComparison()
             }
         }
     }
 }
 
 @Composable
-fun CreatePair(firstStartValue: Offset, SecondStartValue: Offset, text: Pair<String, String>) {
+private fun CreateComparison() {
+    val viewModel = SecondPageViewModel()
+    val comparison = viewModel.getRandomComparison()
+    var id = 0
+    val firstPartWithId = mutableListOf<Pair<String, Int>>()
+    val secondPartWithId = mutableListOf<Pair<String, Int>>()
 
-    var firstOffset by remember { mutableStateOf(firstStartValue) }
-    var secondOffset by remember { mutableStateOf(SecondStartValue) }
+    comparison.pairs.forEach {
+        firstPartWithId.add(Pair(it.first, id))
+        secondPartWithId.add(Pair(it.second, id))
+        id++
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        CreateColumn(viewModel, firstPartWithId.shuffled(), 1)
+        CreateColumn(viewModel, secondPartWithId.shuffled(), 2)
+    }
+}
+
+@Composable
+private fun CreateColumn(
+    viewModel: SecondPageViewModel,
+    shuffled: List<Pair<String, Int>>,
+    column: Int
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        shuffled.forEach {
+            CreateButton(
+                viewModel = viewModel,
+                text = it.first,
+                id = it.second,
+                column = column
+            )
+        }
+    }
+}
+
+@Composable
+private fun CreateButton(viewModel: SecondPageViewModel, text: String, id: Int, column: Int) {
+
+    var offset by remember { mutableStateOf(Offset.Zero) }
+    var position by remember { mutableStateOf(Offset.Zero) }
     var match by remember { mutableStateOf(false) }
-    val color by animateColorAsState(targetValue = if (match) Color.Green else White)
+    match = viewModel.matchingButtons.contains(id)
 
-    val randomPoint by remember {
-        mutableStateOf(getRandomOffsetOutsideTheScreen())
-    }
-
-    val runawayOffsetFirst by animateOffsetAsState(
-        targetValue = if (match) randomPoint else Offset(500f, 500f),
-        animationSpec = tween(durationMillis = 2000, easing = LinearEasing)
-    )
-    val runawayOffsetSecond by animateOffsetAsState(
-        targetValue = if (match) randomPoint else Offset(500f, 500f),
-        animationSpec = tween(durationMillis = 2000, easing = LinearEasing)
-    )
-
-    var firstWidth = 0
-    var secondWidth = 0
-
-    OutlinedButton(onClick = {},
-        colors = ButtonDefaults.buttonColors(containerColor = color),
-        modifier = Modifier
-            .onGloballyPositioned {
-                firstWidth = it.size.width
-            }
-            .offset {
-                if (match)
-                    IntOffset(runawayOffsetFirst.x.roundToInt(), runawayOffsetFirst.y.roundToInt())
-                else
-                    IntOffset(
-                        firstOffset.x.roundToInt(),
-                        firstOffset.y.roundToInt()
-                    )
-            }
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        firstOffset += dragAmount
-                    },
-                    onDragEnd = {
-                        Log.d("FirstButton", "firstOffset = $firstOffset secondOffset = $secondOffset")
-                        match = checkMatching(firstOffset, secondOffset)
-                    }
-                )
-            }
+    AnimatedVisibility(
+        visible = !match,
+        exit = slideOutVertically() + shrinkVertically() + fadeOut()
     ) {
-        Text(text = text.first)
-    }
-
-    OutlinedButton(onClick = {},
-        colors = ButtonDefaults.buttonColors(containerColor = color),
-        modifier = Modifier
-            .onGloballyPositioned {
-                secondWidth = it.size.width
-            }
-            .offset {
-                if (match)
-                    IntOffset(
-                        runawayOffsetSecond.x.roundToInt(),
-                        runawayOffsetSecond.y.roundToInt()
+        OutlinedButton(onClick = { },
+            colors = ButtonDefaults.buttonColors(containerColor = White),
+            modifier = Modifier
+                .onGloballyPositioned {
+                    viewModel.updatePosition(position, id, column)
+                    position = it.localToWindow(
+                        Offset.Zero
                     )
-                else
+                }
+//                .alpha(alpha)
+                .offset {
                     IntOffset(
-                        secondOffset.x.roundToInt(),
-                        secondOffset.y.roundToInt()
+                        offset.x.roundToInt(),
+                        offset.y.roundToInt()
                     )
-            }
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        secondOffset += dragAmount
-                    },
-                    onDragEnd = {
-                        Log.d("SecondButton", "firstOffset = $firstOffset secondOffset = $secondOffset")
-                        match = checkMatching(firstOffset, secondOffset)
-                    }
-                )
-            }
-    ) {
-        Text(text = text.second)
+                }
+                .pointerInput(Unit) {
+                    detectDragGestures(
+                        onDrag = { change, dragAmount ->
+                            change.consume()
+                            offset += dragAmount
+                        },
+                        onDragEnd = {
+                            position += offset
+                            viewModel.updatePosition(position, id, column)
+                            viewModel.checkMatching()
+                        }
+                    )
+                }
+        ) {
+            Text(text = text, fontSize = 20.sp)
+        }
     }
 }
-
-private fun getRandomOffsetOutsideTheScreen(): Offset {
-    println("getRandomOffsetOutsideTheScreen()")
-    val randomPoints = listOf(
-        Random.nextInt(1500, 6500).toFloat(),
-        Random.nextInt(-5500, -500).toFloat(),
-        Random.nextInt(1500, 6500).toFloat(),
-        Random.nextInt(-5500, -500).toFloat()
-    )
-    return Offset(
-        randomPoints[Random.nextInt(randomPoints.size)],
-        randomPoints[Random.nextInt(randomPoints.size)]
-    )
-}
-
-private fun checkMatching(firstOffset: Offset, secondOffset: Offset): Boolean {
-    return (firstOffset.x in secondOffset.x - ROUND..secondOffset.x + ROUND &&
-        firstOffset.y in secondOffset.y - ROUND..secondOffset.y + ROUND)
-}
-
-private fun getRandomComparison(): Comparison {
-    val forms = getAllComparison()
-    return forms[Random.nextInt(forms.size)]
-}
-
-private fun getAllComparison(): List<Comparison> {
-    return listOf(
-        Comparison(
-            listOf(
-                Pair("Один", "1"),
-                Pair("Два", "2"),
-                Pair("Три", "3"),
-                Pair("Четыре", "4")
-            )
-        ),
-        Comparison(
-            listOf(
-                Pair("Огурец", "Зеленый"),
-                Pair("Помидор", "Красный"),
-                Pair("Тыква", "Оранжевый"),
-                Pair("Лук", "Желтый")
-            )
-        ),
-        Comparison(
-            listOf(
-                Pair("Медведь", "Берлога"),
-                Pair("Лиса", "Нора"),
-                Pair("Белка", "Дупло"),
-                Pair("Птица", "Гнездо")
-            )
-        ),
-        Comparison(
-            listOf(
-                Pair("Кошка", "Мяукает"),
-                Pair("Собака", "Лает"),
-                Pair("Лошадь", "Ржет"),
-                Pair("Овца", "Блеет")
-            )
-        ),
-        Comparison(
-            listOf(
-                Pair("Январь", "Зима"),
-                Pair("Апрель", "Весна"),
-                Pair("Июль", "Лето"),
-                Pair("Сентябрь", "Осень")
-            )
-        )
-    )
-}
-
-data class Comparison(
-    val pairs: List<Pair<String, String>>,
-)

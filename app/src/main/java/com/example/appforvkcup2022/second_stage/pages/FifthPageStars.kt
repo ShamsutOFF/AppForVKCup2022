@@ -35,23 +35,6 @@ fun StarsRatingBar(
 ) {
     var animated by remember { mutableStateOf(false) }
     val rotation = remember { Animatable(initialValue = 360f) }
-
-//    val transition = updateTransition(targetState = animated, label = "Star")
-//    val sizeValue by transition.animateDp(
-////    val sizeValue by transition.animateDp(
-////        transitionSpec = { repeatable(2,tween(durationMillis = 1000), repeatMode = RepeatMode.Reverse) },
-////        transitionSpec = { tween(durationMillis = 1000) },
-//
-//        label = "",
-//    ) { screenState ->
-//
-//        if (screenState) {
-//            72.dp
-//        } else {
-//            64.dp
-//        }
-//    }
-
     var ratingState by remember { mutableStateOf(rating) }
     var selected by remember { mutableStateOf(false) }
 
