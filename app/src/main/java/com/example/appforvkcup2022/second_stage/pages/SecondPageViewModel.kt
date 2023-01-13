@@ -33,17 +33,23 @@ class SecondPageViewModel : ViewModel() {
         positionFirstColumnButtons += id to position
         else positionSecondColumnButtons += id to position
     }
-    fun checkMatching() {
+    fun checkMatching(): Boolean {
+        var match: Boolean = false
         positionFirstColumnButtons.forEach {
             val firstOffset = it.value
             val secondOffset = positionSecondColumnButtons[it.key]
             if (secondOffset != null) {
                 if (firstOffset.x in secondOffset.x - ROUND..secondOffset.x + ROUND &&
                     firstOffset.y in secondOffset.y - ROUND..secondOffset.y + ROUND
-                )
+                ) {
                     matchingButtons.add(it.key)
+                    match = true
+                }
+                    else
+                        match = false
             }
         }
+        return match
     }
 
     fun getRandomComparison(): Comparison {
