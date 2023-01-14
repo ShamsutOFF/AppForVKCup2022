@@ -3,6 +3,7 @@ package com.example.appforvkcup2022.second_stage.pages
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
+import com.example.appforvkcup2022.second_stage.model.TextWithMissingWords
 import kotlin.random.Random
 
 private const val ROUND = 150
@@ -85,8 +86,3 @@ return questions[Random.nextInt(questions.size)]
         return match
     }
 }
-
-data class TextWithMissingWords(
-    val text: String,
-    val words: List<Pair<String, Int>>
-)
