@@ -1,4 +1,4 @@
-package com.example.appforvkcup2022.second_stage.pages
+package com.example.appforvkcup2022.second_stage.pages.fifth_page
 
 import android.view.MotionEvent
 import androidx.compose.animation.core.*
@@ -70,9 +70,9 @@ fun StarsRatingBar(
                     .pointerInteropFilter {
                         when (it.action) {
                             MotionEvent.ACTION_DOWN -> {
-                                if (ratingState == i){
+                                if (ratingState == i) {
                                     ratingState = 0
-                                } else{
+                                } else {
                                     ratingState = i
                                 }
                                 selected = true
@@ -88,6 +88,5 @@ fun StarsRatingBar(
                 tint = Orange
             )
         }
-
     }
 }

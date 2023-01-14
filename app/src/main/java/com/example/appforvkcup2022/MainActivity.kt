@@ -53,14 +53,11 @@ class MainActivity : ComponentActivity() {
                         composable("first") { FirstStageScreen() }
                         composable("second") { SecondStageScreen() }
                     }
-
                 }
-
             }
         }
     }
 }
-
 
 @Composable
 fun DrawButton(openScreen: () -> Unit, text: String) {

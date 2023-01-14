@@ -1,8 +1,6 @@
-package com.example.appforvkcup2022.second_stage.pages
+package com.example.appforvkcup2022.second_stage.pages.second_page
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
 import kotlin.random.Random
@@ -13,28 +11,16 @@ class SecondPageViewModel : ViewModel() {
     var positionFirstColumnButtons = mutableMapOf<Int, Offset>()
     var positionSecondColumnButtons = mutableMapOf<Int, Offset>()
     var matchingButtons = mutableStateListOf<Int>()
-    private set
+        private set
 
-//    fun getRandomOffsetOutsideTheScreen(): Offset {
-//        val randomPoints = listOf(
-//            Random.nextInt(1500, 6500).toFloat(),
-//            Random.nextInt(-5500, -500).toFloat(),
-//            Random.nextInt(1500, 6500).toFloat(),
-//            Random.nextInt(-5500, -500).toFloat()
-//        )
-//        return Offset(
-//            randomPoints[Random.nextInt(randomPoints.size)],
-//            randomPoints[Random.nextInt(randomPoints.size)]
-//        )
-//    }
-
-    fun updatePosition(position :Offset, id: Int, column : Int){
+    fun updatePosition(position: Offset, id: Int, column: Int) {
         if (column == 1)
-        positionFirstColumnButtons += id to position
+            positionFirstColumnButtons += id to position
         else positionSecondColumnButtons += id to position
     }
+
     fun checkMatching(): Boolean {
-        var match: Boolean = false
+        var match = false
         positionFirstColumnButtons.forEach {
             val firstOffset = it.value
             val secondOffset = positionSecondColumnButtons[it.key]
@@ -44,9 +30,8 @@ class SecondPageViewModel : ViewModel() {
                 ) {
                     matchingButtons.add(it.key)
                     match = true
-                }
-                    else
-                        match = false
+                } else
+                    match = false
             }
         }
         return match

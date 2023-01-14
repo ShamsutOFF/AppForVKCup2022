@@ -1,4 +1,4 @@
-package com.example.appforvkcup2022.second_stage.pages
+package com.example.appforvkcup2022.second_stage.pages.third_page
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -69,7 +69,7 @@ private fun TextLoader(viewModel: ThirdPageViewModel) {
                 if (it != '$') tempText += it
                 else {
                     OrdinaryText(tempText)
-                    ReplaceableInputText(viewModel, missingWords[id++])
+                    ReplaceableInputText(missingWords[id++])
                     tempText = ""
                 }
             }
@@ -84,7 +84,7 @@ private fun OrdinaryText(string: String) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun ReplaceableInputText(viewModel: ThirdPageViewModel, missingText: Pair<String, Int>) {
+private fun ReplaceableInputText(missingText: Pair<String, Int>) {
     val keyboardController = LocalSoftwareKeyboardController.current
     var text by remember {
         mutableStateOf("          ")
@@ -102,12 +102,11 @@ private fun ReplaceableInputText(viewModel: ThirdPageViewModel, missingText: Pai
         keyboardActions = KeyboardActions(
             onDone = {
                 keyboardController?.hide()
-                repeat(10){
+                repeat(10) {
                     text = text.removeSuffix(" ")
                     text = text.removePrefix(" ")
-//                    println("text = [$text]")
                 }
-                if (text.equals(missingText.first, true)){
+                if (text.equals(missingText.first, true)) {
                     println("equals!!!")
                 } else text = "          "
             })

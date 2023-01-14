@@ -1,8 +1,7 @@
-package com.example.appforvkcup2022.second_stage.pages
+package com.example.appforvkcup2022.second_stage.pages.fourth_page
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,16 +15,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.appforvkcup2022.ui.theme.Green
 import com.example.appforvkcup2022.ui.theme.Orange
-import com.example.appforvkcup2022.ui.theme.Red
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import kotlin.math.roundToInt
@@ -34,9 +30,11 @@ import kotlin.math.roundToInt
 fun DrawFourthPage() {
     LazyColumn() {
         items(count = Int.MAX_VALUE) { count ->
-            ElevatedCard(modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()) {
+            ElevatedCard(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            ) {
                 TextAndButtonsLoader(FourthPageViewModel())
             }
         }
@@ -101,11 +99,15 @@ private fun ReplaceableText(viewModel: FourthPageViewModel, id: Int) {
         if (id == it.second) matchingWord = it.first
     }
     AnimatedContent(targetState = matchingWord) { text ->
-        Text(text = text, color = Orange, fontSize = 25.sp, modifier = Modifier.onGloballyPositioned {
-            viewModel.addTextPosition(
-                it.localToWindow(Offset.Zero), id
-            )
-        })
+        Text(
+            text = text,
+            color = Orange,
+            fontSize = 25.sp,
+            modifier = Modifier.onGloballyPositioned {
+                viewModel.addTextPosition(
+                    it.localToWindow(Offset.Zero), id
+                )
+            })
     }
 }
 

@@ -1,4 +1,4 @@
-package com.example.appforvkcup2022.second_stage.pages
+package com.example.appforvkcup2022.second_stage.pages.first_page
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -23,12 +23,10 @@ import androidx.compose.ui.unit.dp
 import com.example.appforvkcup2022.R
 import com.example.appforvkcup2022.first_stage.DIMENS
 import com.example.appforvkcup2022.second_stage.model.Answer
-import com.example.appforvkcup2022.second_stage.model.SurveyForm
 import com.example.appforvkcup2022.ui.theme.Green
 import com.example.appforvkcup2022.ui.theme.InvisibleColor
 import com.example.appforvkcup2022.ui.theme.Red
 import com.example.appforvkcup2022.ui.theme.White
-import kotlin.random.Random
 
 @Composable
 fun DrawFirstPage() {
@@ -42,7 +40,8 @@ fun DrawFirstPage() {
                     )
                     .fillMaxWidth()
             ) {
-                val form = getRandomSurveyForm()
+                val viewModel = FirstPageViewModel()
+                val form = viewModel.getRandomSurveyForm()
                 Column(modifier = Modifier.padding(8.dp)) {
                     Text(
                         modifier = Modifier.padding(3.dp),
@@ -50,7 +49,7 @@ fun DrawFirstPage() {
                         fontSize = DIMENS.FONT_SIZE_18,
                         fontWeight = FontWeight.ExtraBold
                     )
-                    CreateAnswersChipsGroup(form.answers.shuffled())
+                    CreateAnswersChipsGroup(viewModel, form.answers.shuffled())
                 }
             }
         }
@@ -58,8 +57,8 @@ fun DrawFirstPage() {
 }
 
 @Composable
-fun CreateAnswersChipsGroup(answers: List<Answer>) {
-    val percents = getRandomPercentForAnswers(answers.size)
+fun CreateAnswersChipsGroup(viewModel: FirstPageViewModel, answers: List<Answer>) {
+    val percents = viewModel.getRandomPercentForAnswers(answers.size)
     var enabled by rememberSaveable {
         mutableStateOf(true)
     }
@@ -126,74 +125,12 @@ private fun DrawChip(answer: Answer, enabled: Boolean, click: () -> Unit) {
             )
             LinearProgressIndicator(
                 progress,
-                modifier = Modifier.fillMaxWidth().height(2.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp),
                 color = White,
                 trackColor = InvisibleColor
             )
         }
     }
-}
-
-private fun getRandomSurveyForm(): SurveyForm {
-    val forms = getSurveyForms()
-    return forms[Random.nextInt(forms.size)]
-}
-
-private fun getSurveyForms(): List<SurveyForm> {
-    return listOf(
-        SurveyForm(
-            "Почему змеи высовывают язык:", listOf(
-                Answer("Чтобы напугать хищников", 0, false),
-                Answer("Чтобы облизать добычу", 0, false),
-                Answer("Чтобы издать шипящий звук", 0, false),
-                Answer("Чтобы понюхать воздух", 0, true)
-            )
-        ),
-        SurveyForm(
-            "Самая маленькая птица:", listOf(
-                Answer("Колибри", 0, true),
-                Answer("Снегирь", 0, false),
-                Answer("Ворона", 0, false)
-            )
-        ),
-        SurveyForm(
-            "Самый кассовый фильм в истории это:", listOf(
-                Answer("Титаник", 0, false),
-                Answer("Аватар", 0, true),
-                Answer("Мстители: Финал", 0, false)
-            )
-        ),
-        SurveyForm(
-            "Самая большая планета Солнечной системы это:", listOf(
-                Answer("Марс", 0, false),
-                Answer("Сатурн", 0, false),
-                Answer("Юпитер", 0, true),
-                Answer("Венера", 0, false),
-                Answer("Земля", 0, false)
-            )
-        ),
-        SurveyForm(
-            "В каком году основали ВК:", listOf(
-                Answer("2008", 0, false),
-                Answer("2006", 0, true),
-                Answer("2004", 0, false),
-                Answer("2010", 0, false)
-            )
-        )
-    )
-}
-
-private fun getRandomPercentForAnswers(answersQuantity: Int): List<Int> {
-    var maxPercent = 100
-    val listOfPercents = mutableListOf<Int>()
-    return if (answersQuantity > 1) {
-        for (i in 1 until answersQuantity) {
-            val randomPercent = Random.nextInt(maxPercent)
-            listOfPercents.add(randomPercent)
-            maxPercent -= randomPercent
-        }
-        listOfPercents.add(maxPercent)
-        listOfPercents
-    } else if (answersQuantity == 1) listOf(100)
-    else emptyList()
 }

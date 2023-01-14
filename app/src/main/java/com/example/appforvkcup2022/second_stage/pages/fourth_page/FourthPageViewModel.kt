@@ -1,4 +1,4 @@
-package com.example.appforvkcup2022.second_stage.pages
+package com.example.appforvkcup2022.second_stage.pages.fourth_page
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.geometry.Offset
@@ -45,7 +45,7 @@ class FourthPageViewModel : ViewModel() {
                 )
             ),
             TextWithMissingWords(
-                    "На данный момент, единственным акционером соцсети $ является $.",
+                "На данный момент, единственным акционером соцсети $ является $.",
                 listOf(
                     Pair("ВКонтакте", 1),
                     Pair("Mail.ru Group", 2),
@@ -54,7 +54,7 @@ class FourthPageViewModel : ViewModel() {
                 )
             ),
             TextWithMissingWords(
-                    "Штаб-квартира $ располагается в Доме компании $.",
+                "Штаб-квартира $ располагается в Доме компании $.",
                 listOf(
                     Pair("ВКонтакте", 1),
                     Pair("Зингер", 2),
@@ -67,7 +67,7 @@ class FourthPageViewModel : ViewModel() {
 
     fun getRandomTextAndWords(): TextWithMissingWords {
         val questions = getAllTextAndWords()
-return questions[Random.nextInt(questions.size)]
+        return questions[Random.nextInt(questions.size)]
     }
 
     fun addTextPosition(position: Offset, id: Int) {

@@ -1,23 +1,26 @@
-package com.example.appforvkcup2022.second_stage.pages
+package com.example.appforvkcup2022.second_stage.pages.second_page
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.appforvkcup2022.ui.theme.White
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
@@ -29,15 +32,14 @@ fun DrawSecondPage() {
                     .padding(8.dp, 8.dp)
                     .fillMaxWidth()
             ) {
-                CreateComparison()
+                CreateComparison(SecondPageViewModel())
             }
         }
     }
 }
 
 @Composable
-private fun CreateComparison() {
-    val viewModel = SecondPageViewModel()
+private fun CreateComparison(viewModel: SecondPageViewModel) {
     val comparison = viewModel.getRandomComparison()
     var id = 0
     val firstPartWithId = mutableListOf<Pair<String, Int>>()

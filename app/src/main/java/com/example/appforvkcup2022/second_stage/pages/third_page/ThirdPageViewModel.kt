@@ -1,4 +1,4 @@
-package com.example.appforvkcup2022.second_stage.pages
+package com.example.appforvkcup2022.second_stage.pages.third_page
 
 import androidx.lifecycle.ViewModel
 import com.example.appforvkcup2022.second_stage.model.TextWithMissingWords
