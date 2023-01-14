@@ -1,6 +1,5 @@
 package com.example.appforvkcup2022.second_stage.pages
 
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -23,6 +22,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.appforvkcup2022.ui.theme.Orange
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import kotlin.math.roundToInt
@@ -98,7 +98,7 @@ private fun ReplaceableText(viewModel: FourthPageViewModel, id: Int) {
         if (id == it.second) matchingWord = it.first
     }
     AnimatedContent(targetState = matchingWord) { text ->
-        Text(text = text, fontSize = 25.sp, modifier = Modifier.onGloballyPositioned {
+        Text(text = text, color = Orange, fontSize = 25.sp, modifier = Modifier.onGloballyPositioned {
             viewModel.addTextPosition(
                 it.localToWindow(Offset.Zero), id
             )
@@ -116,12 +116,8 @@ private fun ButtonForPlace(viewModel: FourthPageViewModel, text: String, id: Int
         visible = visible,
         exit = slideOutVertically() + shrinkVertically() + fadeOut()
     ) {
-        OutlinedButton(onClick = {
-            visible = false
-            Log.d("ElevatedButton", "*** buttonPosition = $buttonPosition")
-            Log.d("ElevatedButton", "*** buttonOffset = $buttonOffset")
-        },
-            border = BorderStroke(2.dp, Color.LightGray),
+        OutlinedButton(onClick = { },
+            border = BorderStroke(2.dp, Orange),
             modifier = Modifier
                 .onGloballyPositioned {
                     buttonPosition = it.localToWindow(
@@ -142,7 +138,6 @@ private fun ButtonForPlace(viewModel: FourthPageViewModel, text: String, id: Int
                         },
                         onDragEnd = {
                             buttonPosition += buttonOffset
-                            Log.d("ElevatedButton", "*** buttonPosition = $buttonPosition")
                             if (!viewModel.checkMatching(buttonPosition, text, id))
                                 buttonOffset = Offset.Zero
                             else visible = false
@@ -150,7 +145,7 @@ private fun ButtonForPlace(viewModel: FourthPageViewModel, text: String, id: Int
                     )
                 }
         ) {
-            Text(text = text, fontSize = 20.sp, color = Color.LightGray)
+            Text(text = text, fontSize = 20.sp, color = Orange)
         }
     }
 }

@@ -99,7 +99,6 @@ private fun CreateButton(viewModel: SecondPageViewModel, text: String, id: Int, 
                         Offset.Zero
                     )
                 }
-//                .alpha(alpha)
                 .offset {
                     IntOffset(
                         offset.x.roundToInt(),
@@ -115,7 +114,7 @@ private fun CreateButton(viewModel: SecondPageViewModel, text: String, id: Int, 
                         onDragEnd = {
                             position += offset
                             viewModel.updatePosition(position, id, column)
-                            viewModel.checkMatching()
+                            if (!viewModel.checkMatching()) offset = Offset.Zero
                         }
                     )
                 }

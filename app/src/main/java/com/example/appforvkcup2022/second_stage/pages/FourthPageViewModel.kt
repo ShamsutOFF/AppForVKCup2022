@@ -1,6 +1,5 @@
 package com.example.appforvkcup2022.second_stage.pages
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
@@ -82,7 +81,6 @@ return questions[Random.nextInt(questions.size)]
                 && buttonOffset.y in it.first.y - ROUND..it.first.y + ROUND
             ) match = true
         }
-        Log.d("MainViewModel", "checkMatching return = $match")
         if (match) matchingWords.add(Pair(buttonText, buttonId))
         return match
     }
