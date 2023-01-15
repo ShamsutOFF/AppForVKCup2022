@@ -22,7 +22,7 @@ fun DrawFifthPage() {
     LazyColumn() {
         items(count = Int.MAX_VALUE) { count ->
             ElevatedCard(modifier = Modifier.padding(3.dp)) {
-                StarsRatingBar(rating = 0)
+                CreateStarsRatingBar(rating = 0)
             }
         }
     }
@@ -30,7 +30,7 @@ fun DrawFifthPage() {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun StarsRatingBar(
+fun CreateStarsRatingBar(
     rating: Int
 ) {
     var animated by remember { mutableStateOf(false) }

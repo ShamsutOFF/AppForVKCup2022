@@ -5,11 +5,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
 import kotlin.random.Random
 
-private const val ROUND = 150
+private const val ROUND = 100
 
 class SecondPageViewModel : ViewModel() {
-    var positionFirstColumnButtons = mutableMapOf<Int, Offset>()
-    var positionSecondColumnButtons = mutableMapOf<Int, Offset>()
+    private var positionFirstColumnButtons = mutableMapOf<Int, Offset>()
+    private var positionSecondColumnButtons = mutableMapOf<Int, Offset>()
     var matchingButtons = mutableStateListOf<Int>()
         private set
 
@@ -86,7 +86,6 @@ class SecondPageViewModel : ViewModel() {
             )
         )
     }
-
 }
 
 data class Comparison(

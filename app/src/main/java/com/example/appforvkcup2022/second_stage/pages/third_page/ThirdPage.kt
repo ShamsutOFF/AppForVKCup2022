@@ -32,15 +32,14 @@ fun DrawThirdPage() {
                     .padding(8.dp)
                     .fillMaxWidth()
             ) {
-                TextLoader(ThirdPageViewModel())
+                CreateText(ThirdPageViewModel())
             }
         }
     }
 }
 
-
 @Composable
-private fun TextLoader(viewModel: ThirdPageViewModel) {
+private fun CreateText(viewModel: ThirdPageViewModel) {
     val question = viewModel.getRandomTextAndWords()
     val text = question.text
     val missingWords = question.words
@@ -59,17 +58,17 @@ private fun TextLoader(viewModel: ThirdPageViewModel) {
             text.forEachIndexed { index, it ->
                 if (index == text.lastIndex) {
                     tempText += it
-                    OrdinaryText(string = tempText)
+                    DrawOrdinaryText(string = tempText)
                 }
                 if (it == ' ') {
                     tempText += it
-                    OrdinaryText(string = tempText)
+                    DrawOrdinaryText(string = tempText)
                     tempText = ""
                 }
                 if (it != '$') tempText += it
                 else {
-                    OrdinaryText(tempText)
-                    ReplaceableInputText(missingWords[id++])
+                    DrawOrdinaryText(tempText)
+                    DrawReplaceableInputText(missingWords[id++])
                     tempText = ""
                 }
             }
@@ -78,13 +77,13 @@ private fun TextLoader(viewModel: ThirdPageViewModel) {
 }
 
 @Composable
-private fun OrdinaryText(string: String) {
+private fun DrawOrdinaryText(string: String) {
     Text(text = string, fontSize = 25.sp)
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun ReplaceableInputText(missingText: Pair<String, Int>) {
+private fun DrawReplaceableInputText(missingText: Pair<String, Int>) {
     val keyboardController = LocalSoftwareKeyboardController.current
     var text by remember {
         mutableStateOf("          ")

@@ -70,7 +70,7 @@ private fun CreateColumn(
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         shuffled.forEach {
-            CreateButton(
+            DrawButton(
                 viewModel = viewModel,
                 text = it.first,
                 id = it.second,
@@ -81,7 +81,7 @@ private fun CreateColumn(
 }
 
 @Composable
-private fun CreateButton(viewModel: SecondPageViewModel, text: String, id: Int, column: Int) {
+private fun DrawButton(viewModel: SecondPageViewModel, text: String, id: Int, column: Int) {
 
     var offset by remember { mutableStateOf(Offset.Zero) }
     var position by remember { mutableStateOf(Offset.Zero) }

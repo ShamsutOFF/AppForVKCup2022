@@ -35,7 +35,7 @@ fun DrawFourthPage() {
                     .padding(8.dp)
                     .fillMaxWidth()
             ) {
-                TextAndButtonsLoader(FourthPageViewModel())
+                CreateTextAndButtons(FourthPageViewModel())
             }
         }
     }
@@ -43,7 +43,7 @@ fun DrawFourthPage() {
 
 
 @Composable
-private fun TextAndButtonsLoader(viewModel: FourthPageViewModel) {
+private fun CreateTextAndButtons(viewModel: FourthPageViewModel) {
     val question = viewModel.getRandomTextAndWords()
     val text = question.text
     val missingWords = question.words
@@ -62,36 +62,36 @@ private fun TextAndButtonsLoader(viewModel: FourthPageViewModel) {
             text.forEachIndexed { index, it ->
                 if (index == text.lastIndex) {
                     tempText += it
-                    OrdinaryText(string = tempText)
+                    DrawOrdinaryText(string = tempText)
                 }
                 if (it == ' ') {
                     tempText += it
-                    OrdinaryText(string = tempText)
+                    DrawOrdinaryText(string = tempText)
                     tempText = ""
                 }
                 if (it != '$') tempText += it
                 else {
-                    OrdinaryText(tempText)
-                    ReplaceableText(viewModel, ++id)
+                    DrawOrdinaryText(tempText)
+                    DrawReplaceableText(viewModel, ++id)
                     tempText = ""
                 }
             }
         }
         FlowRow(mainAxisSpacing = 5.dp, mainAxisAlignment = FlowMainAxisAlignment.Center) {
-            missingWords.shuffled().forEach { ButtonForPlace(viewModel, it.first, it.second) }
+            missingWords.shuffled().forEach { DrawButtonForPlace(viewModel, it.first, it.second) }
         }
     }
 
 }
 
 @Composable
-private fun OrdinaryText(string: String) {
+private fun DrawOrdinaryText(string: String) {
     Text(text = string, fontSize = 25.sp)
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-private fun ReplaceableText(viewModel: FourthPageViewModel, id: Int) {
+private fun DrawReplaceableText(viewModel: FourthPageViewModel, id: Int) {
     var matchingWord by remember {
         mutableStateOf(" _____ ")
     }
@@ -112,7 +112,7 @@ private fun ReplaceableText(viewModel: FourthPageViewModel, id: Int) {
 }
 
 @Composable
-private fun ButtonForPlace(viewModel: FourthPageViewModel, text: String, id: Int) {
+private fun DrawButtonForPlace(viewModel: FourthPageViewModel, text: String, id: Int) {
     var buttonPosition by remember { mutableStateOf(Offset.Zero) }
     var buttonOffset by remember { mutableStateOf(Offset.Zero) }
     var visible by remember { mutableStateOf(true) }

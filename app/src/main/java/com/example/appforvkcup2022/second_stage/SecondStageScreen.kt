@@ -56,7 +56,7 @@ fun SecondStageScreen() {
                 activeColor = Color.White,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(16.dp, 16.dp, 16.dp, 64.dp),
+                    .padding(16.dp, 16.dp, 16.dp, 16.dp),
             )
         }
     }

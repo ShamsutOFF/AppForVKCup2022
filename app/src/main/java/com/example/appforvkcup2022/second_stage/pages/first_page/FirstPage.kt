@@ -23,10 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.appforvkcup2022.R
 import com.example.appforvkcup2022.first_stage.DIMENS
 import com.example.appforvkcup2022.second_stage.model.Answer
-import com.example.appforvkcup2022.ui.theme.Green
-import com.example.appforvkcup2022.ui.theme.InvisibleColor
-import com.example.appforvkcup2022.ui.theme.Red
-import com.example.appforvkcup2022.ui.theme.White
+import com.example.appforvkcup2022.ui.theme.*
 
 @Composable
 fun DrawFirstPage() {
