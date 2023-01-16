@@ -4,9 +4,12 @@ import android.view.MotionEvent
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -19,7 +22,8 @@ import com.example.appforvkcup2022.ui.theme.Orange
 
 @Composable
 fun DrawFifthPage() {
-    LazyColumn() {
+    val lazyListState: LazyListState = rememberLazyListState()
+    LazyColumn(state = lazyListState) {
         items(count = Int.MAX_VALUE) { count ->
             ElevatedCard(modifier = Modifier.padding(3.dp)) {
                 CreateStarsRatingBar(rating = 0)
@@ -35,8 +39,8 @@ fun CreateStarsRatingBar(
 ) {
     var animated by remember { mutableStateOf(false) }
     val rotation = remember { Animatable(initialValue = 360f) }
-    var ratingState by remember { mutableStateOf(rating) }
-    var selected by remember { mutableStateOf(false) }
+    var ratingState by rememberSaveable { mutableStateOf(rating) }
+    var selected by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(animated) {
         rotation.animateTo(

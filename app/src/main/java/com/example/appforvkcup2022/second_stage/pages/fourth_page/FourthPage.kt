@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -28,7 +31,8 @@ import kotlin.math.roundToInt
 
 @Composable
 fun DrawFourthPage() {
-    LazyColumn() {
+    val lazyListState: LazyListState = rememberLazyListState()
+    LazyColumn(state = lazyListState) {
         items(count = Int.MAX_VALUE) { count ->
             ElevatedCard(
                 modifier = Modifier
@@ -44,9 +48,15 @@ fun DrawFourthPage() {
 
 @Composable
 private fun CreateTextAndButtons(viewModel: FourthPageViewModel) {
-    val question = viewModel.getRandomTextAndWords()
-    val text = question.text
-    val missingWords = question.words
+    val question = rememberSaveable {
+        viewModel.getRandomTextAndWords()
+    }
+    val text = rememberSaveable {
+        question.text
+    }
+    val missingWords = rememberSaveable {
+        question.words
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -92,7 +102,7 @@ private fun DrawOrdinaryText(string: String) {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun DrawReplaceableText(viewModel: FourthPageViewModel, id: Int) {
-    var matchingWord by remember {
+    var matchingWord by rememberSaveable {
         mutableStateOf(" _____ ")
     }
     viewModel.matchingWords.forEach {
@@ -115,7 +125,7 @@ private fun DrawReplaceableText(viewModel: FourthPageViewModel, id: Int) {
 private fun DrawButtonForPlace(viewModel: FourthPageViewModel, text: String, id: Int) {
     var buttonPosition by remember { mutableStateOf(Offset.Zero) }
     var buttonOffset by remember { mutableStateOf(Offset.Zero) }
-    var visible by remember { mutableStateOf(true) }
+    var visible by rememberSaveable { mutableStateOf(true) }
 
     AnimatedVisibility(
         visible = visible,
