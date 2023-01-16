@@ -5,15 +5,14 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -27,7 +26,8 @@ import com.example.appforvkcup2022.ui.theme.*
 
 @Composable
 fun DrawFirstPage() {
-    LazyColumn() {
+    val lazyListState: LazyListState = rememberLazyListState()
+    LazyColumn(state = lazyListState) {
         items(count = Int.MAX_VALUE) { count ->
             ElevatedCard(
                 modifier = Modifier
@@ -38,7 +38,12 @@ fun DrawFirstPage() {
                     .fillMaxWidth()
             ) {
                 val viewModel = FirstPageViewModel()
-                val form = viewModel.getRandomSurveyForm()
+                val form = rememberSaveable {
+                    viewModel.getRandomSurveyForm()
+                }
+                val answersShuffled = rememberSaveable {
+                    mutableStateOf(form.answers.shuffled())
+                }
                 Column(modifier = Modifier.padding(8.dp)) {
                     Text(
                         modifier = Modifier.padding(3.dp),
@@ -46,7 +51,7 @@ fun DrawFirstPage() {
                         fontSize = DIMENS.FONT_SIZE_18,
                         fontWeight = FontWeight.ExtraBold
                     )
-                    CreateAnswersChipsGroup(viewModel, form.answers.shuffled())
+                    CreateAnswersChipsGroup(viewModel, answersShuffled)
                 }
             }
         }
@@ -54,12 +59,14 @@ fun DrawFirstPage() {
 }
 
 @Composable
-fun CreateAnswersChipsGroup(viewModel: FirstPageViewModel, answers: List<Answer>) {
-    val percents = viewModel.getRandomPercentForAnswers(answers.size)
+fun CreateAnswersChipsGroup(viewModel: FirstPageViewModel, answers: MutableState<List<Answer>>) {
+    val percents = rememberSaveable {
+        viewModel.getRandomPercentForAnswers(answers.value.size)
+    }
     var enabled by rememberSaveable {
         mutableStateOf(true)
     }
-    answers.forEachIndexed { index, answer ->
+    answers.value.forEachIndexed { index, answer ->
         answer.percent = percents[index]
         DrawChip(answer = answer, enabled) { enabled = false }
     }

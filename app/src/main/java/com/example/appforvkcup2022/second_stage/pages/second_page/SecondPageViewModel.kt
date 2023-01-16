@@ -1,8 +1,11 @@
 package com.example.appforvkcup2022.second_stage.pages.second_page
 
+import android.os.Parcelable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
+import kotlinx.android.parcel.Parcelize
 import kotlin.random.Random
 
 private const val ROUND = 100
@@ -29,6 +32,7 @@ class SecondPageViewModel : ViewModel() {
                     firstOffset.y in secondOffset.y - ROUND..secondOffset.y + ROUND
                 ) {
                     matchingButtons.add(it.key)
+                    matchingButtons.forEach { println("checkMatching() matchingButtons contains $it") }
                     match = true
                 } else
                     match = false
@@ -88,6 +92,7 @@ class SecondPageViewModel : ViewModel() {
     }
 }
 
+@Parcelize
 data class Comparison(
     val pairs: List<Pair<String, String>>,
-)
+) : Parcelable

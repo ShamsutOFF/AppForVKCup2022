@@ -7,11 +7,14 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -20,12 +23,14 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import com.example.appforvkcup2022.ui.theme.White
 import kotlin.math.roundToInt
 
 @Composable
 fun DrawSecondPage() {
-    LazyColumn() {
+    val lazyListState: LazyListState = rememberLazyListState()
+    LazyColumn(state = lazyListState) {
         items(count = Int.MAX_VALUE) { count ->
             ElevatedCard(
                 modifier = Modifier
@@ -40,7 +45,9 @@ fun DrawSecondPage() {
 
 @Composable
 private fun CreateComparison(viewModel: SecondPageViewModel) {
-    val comparison = viewModel.getRandomComparison()
+    val comparison = rememberSaveable {
+        viewModel.getRandomComparison()
+    }
     var id = 0
     val firstPartWithId = mutableListOf<Pair<String, Int>>()
     val secondPartWithId = mutableListOf<Pair<String, Int>>()
@@ -51,14 +58,25 @@ private fun CreateComparison(viewModel: SecondPageViewModel) {
         id++
     }
 
+    val firstColumnShuffled = rememberSaveable {
+        firstPartWithId.shuffled()
+    }
+    val secondColumnShuffled = rememberSaveable {
+        secondPartWithId.shuffled()
+    }
+
+    var positionFirstColumnButtons = mutableMapOf<Int, Offset>()
+    var positionSecondColumnButtons = mutableMapOf<Int, Offset>()
+    var matchingButtons = remember { mutableStateListOf<Int>() }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        CreateColumn(viewModel, firstPartWithId.shuffled(), 1)
-        CreateColumn(viewModel, secondPartWithId.shuffled(), 2)
+        CreateColumn(viewModel, firstColumnShuffled, 1)
+        CreateColumn(viewModel, secondColumnShuffled, 2)
     }
 }
 
@@ -85,8 +103,9 @@ private fun DrawButton(viewModel: SecondPageViewModel, text: String, id: Int, co
 
     var offset by remember { mutableStateOf(Offset.Zero) }
     var position by remember { mutableStateOf(Offset.Zero) }
-    var match by remember { mutableStateOf(false) }
+    var match by rememberSaveable { mutableStateOf(false) }
     match = viewModel.matchingButtons.contains(id)
+    viewModel.matchingButtons.forEach { println("matchingButtons contains $it") }
 
     AnimatedVisibility(
         visible = !match,
