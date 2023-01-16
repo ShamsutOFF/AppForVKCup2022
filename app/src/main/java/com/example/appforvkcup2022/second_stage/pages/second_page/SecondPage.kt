@@ -23,7 +23,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import com.example.appforvkcup2022.ui.theme.White
 import kotlin.math.roundToInt
 
@@ -65,10 +64,6 @@ private fun CreateComparison(viewModel: SecondPageViewModel) {
         secondPartWithId.shuffled()
     }
 
-    var positionFirstColumnButtons = mutableMapOf<Int, Offset>()
-    var positionSecondColumnButtons = mutableMapOf<Int, Offset>()
-    var matchingButtons = remember { mutableStateListOf<Int>() }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -100,7 +95,6 @@ private fun CreateColumn(
 
 @Composable
 private fun DrawButton(viewModel: SecondPageViewModel, text: String, id: Int, column: Int) {
-
     var offset by remember { mutableStateOf(Offset.Zero) }
     var position by remember { mutableStateOf(Offset.Zero) }
     var match by rememberSaveable { mutableStateOf(false) }

@@ -32,10 +32,8 @@ class SecondPageViewModel : ViewModel() {
                     firstOffset.y in secondOffset.y - ROUND..secondOffset.y + ROUND
                 ) {
                     matchingButtons.add(it.key)
-                    matchingButtons.forEach { println("checkMatching() matchingButtons contains $it") }
                     match = true
-                } else
-                    match = false
+                }
             }
         }
         return match
